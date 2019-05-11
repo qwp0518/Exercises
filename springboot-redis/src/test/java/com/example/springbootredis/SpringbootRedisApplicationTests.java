@@ -19,4 +19,10 @@ public class SpringbootRedisApplicationTests {
         this.redisTemplate.opsForValue().set("name","william");
     }
 
+    @Test
+    public void testGet(){
+        String value = (String) this.redisTemplate.opsForValue().get("name");
+        System.out.println(value);
+    }
+
 }

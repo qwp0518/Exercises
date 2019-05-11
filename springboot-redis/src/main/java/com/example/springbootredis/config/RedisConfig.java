@@ -1,5 +1,7 @@
 package com.example.springbootredis.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
@@ -17,15 +19,16 @@ public class RedisConfig {
      * 配置JedisPool
      */
     @Bean
+    @ConfigurationProperties(prefix = "spring.redis.jedis.pool")
     public JedisPoolConfig jedisPoolConfig(){
         JedisPoolConfig config = new JedisPoolConfig();
 
-        //配置最大空闲数
-        config.setMaxIdle(10);
-        //最小空闲数
-        config.setMinIdle(5);
-        //最大连接数
-        config.setMaxTotal(20);
+//        //配置最大空闲数
+//        config.setMaxIdle(10);
+//        //最小空闲数
+//        config.setMinIdle(5);
+//        //最大连接数
+//        config.setMaxTotal(20);
 
         return config;
 
@@ -35,15 +38,18 @@ public class RedisConfig {
      * 配置Redis连接信息
      */
     @Bean
+    @ConfigurationProperties(prefix = "spring.jedis.connection")
     public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig config){
+
+
         JedisConnectionFactory factory = new JedisConnectionFactory();
 
         //关联连接池的配置对象
         factory.setPoolConfig(config);
 
         //配置连接Redis的信息
-        factory.setHostName("192.168.88.128");
-        factory.setPort(6379);
+//        factory.setHostName("192.168.88.128");
+//        factory.setPort(6379);
 
         return factory;
     }
