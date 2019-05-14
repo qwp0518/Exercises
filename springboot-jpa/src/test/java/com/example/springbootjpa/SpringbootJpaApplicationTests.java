@@ -1,21 +1,29 @@
 package com.example.springbootjpa;
 
-import com.example.springbootjpa.dao.UsersCrudRepository;
-import com.example.springbootjpa.dao.UsersRepository;
-import com.example.springbootjpa.dao.UsersRepositoryByName;
-import com.example.springbootjpa.dao.UsersRepositoryQueryAnnotation;
+import com.example.springbootjpa.dao.*;
 import com.example.springbootjpa.pojo.Users;
 import org.apache.catalina.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
+
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,6 +37,10 @@ public class SpringbootJpaApplicationTests {
     private UsersRepositoryQueryAnnotation usersRepositoryQueryAnnotation;
     @Autowired
     private UsersCrudRepository usersCrudRepository;
+    @Autowired
+    private UsersPagingAndSortingRepository usersPagingAndSortingRepository;
+    @Autowired
+    private UsersRepositorySpecExecutor usersRepositorySpecExecutor;
 
     @Test
     public void addTest() {
@@ -83,6 +95,66 @@ public class SpringbootJpaApplicationTests {
     public void testCrudRepositoryFindAll(){
         List<Users> usersList4 =(List<Users>) this.usersCrudRepository.findAll();
         for (Users users:usersList4){
+            System.out.println(users);
+        }
+    }
+
+    @Test
+    public void testPagingAndSortingRepository(){
+        Order order = new Order(Sort.Direction.DESC,"id");
+        Sort sort = new Sort(order);
+        List<Users> usersList5 = (List<Users>)this.usersPagingAndSortingRepository.findAll(sort);
+        for (Users users: usersList5){
+            System.out.println(users);
+        }
+    }
+
+    @Test
+    public void testPagingAndSortingRepositoryPage(){
+        Sort sort = new Sort(Sort.Direction.DESC,"id");
+
+        Pageable pageable = new PageRequest(0,2,sort);
+        Page<Users> usersPage = this.usersPagingAndSortingRepository.findAll(pageable);
+        System.out.println("总条数：" + usersPage.getTotalElements());
+        System.out.println("总页数:" + usersPage.getTotalPages());
+        List<Users> usersList6 = usersPage.getContent();
+        for (Users users:usersList6) {
+            System.out.println(users);
+        }
+    }
+
+    @Test
+    public void testSpecificationExecutor1(){
+        Specification<Users> specification = new Specification<Users>() {
+            @Override
+            public Predicate toPredicate(Root<Users> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.equal(root.get("name"),"william");
+                return predicate;
+
+            }
+        };
+        List<Users> usersList7 = this.usersRepositorySpecExecutor.findAll(specification);
+        for (Users users:usersList7) {
+            System.out.println(users);
+        }
+    }
+
+    @Test
+    public void testSpecificationExecutor2(){
+        Specification<Users> specification = new Specification<Users>() {
+            @Override
+            public Predicate toPredicate(Root<Users> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+                list.add(criteriaBuilder.equal(root.get("name"),"william"));
+                list.add(criteriaBuilder.equal(root.get("age"),25));
+                Predicate[] arr = new Predicate[list.size()];
+
+                return criteriaBuilder.and(list.toArray(arr));
+
+            }
+        };
+        List<Users> usersList8 = this.usersRepositorySpecExecutor.findAll(specification);
+        for (Users users:usersList8) {
             System.out.println(users);
         }
     }
