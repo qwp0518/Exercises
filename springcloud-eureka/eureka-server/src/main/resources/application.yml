@@ -1,4 +1,6 @@
-
+spring:
+  profiles:
+    active: peer3
 ---
 spring:
   profiles: peer1
