@@ -22,7 +22,7 @@ zuul:
     feignapi:
       path: /feignapi/**
       serviceId: eureka-feign-client
-  prefix: /v1
+
 
 
 #ribbon:
