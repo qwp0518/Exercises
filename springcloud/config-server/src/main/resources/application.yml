@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      profile: native
+      server:
+        native:
+          search-locations: classpath:/shared
+
+server:
+  port: 8769
+

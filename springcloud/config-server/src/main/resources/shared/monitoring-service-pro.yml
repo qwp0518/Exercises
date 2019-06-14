@@ -1,0 +1,5 @@
+turbine:
+  aggregate:
+    clusterConfig: default
+  appConfig: user-service, blog-service
+  clusterNameExpression: new String("default")
