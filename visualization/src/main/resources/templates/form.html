@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>数据查询</title>
+</head>
+<body>
+<form th:action="@{/search}" method="post">
+    custNo：<input type="text" name="custNo"><font color="red" th:errors="${requestLabels.custNo}"></font><br/>
+    startDay：<input type="text" name="startDay"><font color="red" th:errors="${requestLabels.startDay}"></font><br/>
+    endDay：<input type="text" name="endDay"><font color="red" th:errors="${requestLabels.endDay}"></font><br/>
+    pageSize：<input type="number" name="pageSize"><font color="red" th:errors="${requestLabels.pageSize}"></font><br/>
+    pageNum：<input type="number" name="pageNum"><font color="red" th:errors="${requestLabels.pageNum}"></font><br/>
+    acctNo：<input type="text" name="acctNo"><font color="red" th:errors="${requestLabels.acctNo}"></font><br/>
+    <input type="submit" value="OK">
+
+</form>
+
+</body>
+</html>
